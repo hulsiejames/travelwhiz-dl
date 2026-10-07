@@ -3,6 +3,7 @@
 # # # # IMPORTS # # # #
 # Built-Ins
 from __future__ import annotations
+
 import re
 import urllib.error
 import urllib.request
@@ -13,9 +14,8 @@ from travelwhiz_dl.config import (
     GITHUB_README_URL,
     USER_AGENT,
 )
-from travelwhiz_dl.locations.lookups import REGION_CODE_TO_NAME
+from travelwhiz_dl.lookups import REGION_CODE_TO_NAME
 from travelwhiz_dl.models import GTFSFeed
-
 
 # # # # CONSTANTS # # # #
 
@@ -81,7 +81,7 @@ def extract_gtfs_urls(readme_text: str) -> list[str]:
 
 def obtain_available_feeds(
     readme_url: str = GITHUB_README_URL,
-) -> tuple[list[GTFSFeed], GTFSFeed\]:
+) -> tuple[list[GTFSFeed], GTFSFeed]:
     """Obtain regional bus feeds and the National Rail feed."""
     readme_text = fetch_readme(readme_url)
     gtfs_urls = extract_gtfs_urls(readme_text)

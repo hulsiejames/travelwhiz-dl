@@ -10,7 +10,7 @@ from typing import Iterable
 
 # Local
 from travelwhiz_dl.config import DEFAULT_MINIMUM_MATCH_SCORE
-from travelwhiz_dl.locations.lookups import PLACE_TO_REGION
+from travelwhiz_dl.lookups import PLACE_TO_REGION
 from travelwhiz_dl.models import GTFSFeed
 
 # # # # FUNCTIONS # # # #
@@ -52,7 +52,7 @@ def match_place_to_bus_feed(
     place_name: str,
     bus_feeds: Iterable[GTFSFeed],
     minimum_score: float = DEFAULT_MINIMUM_MATCH_SCORE,
-) -> tuple[GTFSFeed, float, str\]:
+) -> tuple[GTFSFeed, float, str]:
     """Match a supplied place name to a regional bus feed."""
     available_feeds = list(bus_feeds)
 
@@ -174,4 +174,3 @@ def match_place_to_bus_feed(
         )
 
     return best_feed, best_score, best_term
-``
