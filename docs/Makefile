@@ -1,0 +1,11 @@
+SPHINXBUILD ?= sphinx-build
+SPHINXOPTS ?=
+SOURCEDIR = source
+BUILDDIR = build
+
+.PHONY: help
+help:
+	$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+%:
+	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

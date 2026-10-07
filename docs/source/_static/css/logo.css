@@ -1,0 +1,5 @@
+/* Leave enough room for the project's title in the navigation bar. */
+.navbar-brand .logo__title {
+    white-space: normal;
+    font-size: 1rem;
+}

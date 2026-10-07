@@ -1,0 +1,13 @@
+# Static analysis
+mypy>=1.0
+mypy_extensions>=1.0
+pylint>=3.3.1
+ruff>=0.12
+
+# Test execution and reports
+pytest>=8.3
+pytest-cov>=5.0
+pytest-xdist>=3.6
+
+# Version resolution for editable installs
+versioningit>=3.1
