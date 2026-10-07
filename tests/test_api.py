@@ -1,5 +1,7 @@
 """Tests for the public travelwhiz_dl API."""
 
+from pathlib import Path
+
 import pytest
 
 from travelwhiz_dl import api
@@ -27,26 +29,28 @@ def national_rail_feed() -> GTFSFeed:
 
 
 def test_download_uk_gtfs_downloads_bus_and_rail(
-    tmp_path,
-    monkeypatch,
-    north_west_feed,
-    national_rail_feed,
-):
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    north_west_feed: GTFSFeed,
+    national_rail_feed: GTFSFeed,
+) -> None:
     """The public API should download both requested feeds."""
     downloaded_bus_path = tmp_path / "uk-busmetro-NW.gtfs.zip"
     downloaded_rail_path = tmp_path / "gb-nationalrail.gtfs.zip"
 
-    def fake_obtain_available_feeds():
+    def fake_obtain_available_feeds() -> tuple[list[GTFSFeed], GTFSFeed]:
         return [north_west_feed], national_rail_feed
 
+    expected_minimum_score = 0.72
+
     def fake_match_place_to_bus_feed(
-        place_name,
-        bus_feeds,
-        minimum_score,
-    ):
+        place_name: str,
+        bus_feeds: list[GTFSFeed],
+        minimum_score: float,
+    ) -> tuple[GTFSFeed, float, str]:
         assert place_name == "Greater Manchester"
         assert bus_feeds == [north_west_feed]
-        assert minimum_score == 0.72
+        assert minimum_score == expected_minimum_score
 
         return (
             north_west_feed,
@@ -54,15 +58,15 @@ def test_download_uk_gtfs_downloads_bus_and_rail(
             "greater manchester",
         )
 
-    download_calls = []
+    download_calls: list[dict[str, object]] = []
 
     def fake_download_gtfs_feed(
-        feed,
-        output_directory,
+        feed: GTFSFeed,
+        output_directory: Path,
         *,
-        overwrite,
-        validate,
-    ):
+        overwrite: bool,
+        validate: bool,
+    ) -> Path:
         download_calls.append(
             {
                 "feed": feed,
@@ -127,11 +131,11 @@ def test_download_uk_gtfs_downloads_bus_and_rail(
 
 
 def test_download_uk_gtfs_can_download_bus_only(
-    tmp_path,
-    monkeypatch,
-    north_west_feed,
-    national_rail_feed,
-):
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    north_west_feed: GTFSFeed,
+    national_rail_feed: GTFSFeed,
+) -> None:
     """National Rail should be omitted when it is not requested."""
     downloaded_bus_path = tmp_path / "uk-busmetro-NW.gtfs.zip"
 
@@ -147,22 +151,23 @@ def test_download_uk_gtfs_can_download_bus_only(
     monkeypatch.setattr(
         api,
         "match_place_to_bus_feed",
-        lambda **kwargs: (
+        lambda **_kwargs: (
             north_west_feed,
             1.0,
             "greater manchester",
         ),
     )
 
-    downloaded_feeds = []
+    downloaded_feeds: list[GTFSFeed] = []
 
     def fake_download_gtfs_feed(
-        feed,
-        output_directory,
+        feed: GTFSFeed,
+        output_directory: Path,
         *,
-        overwrite,
-        validate,
-    ):
+        overwrite: bool,
+        validate: bool,
+    ) -> Path:
+        del output_directory, overwrite, validate
         downloaded_feeds.append(feed)
         return downloaded_bus_path
 
@@ -188,11 +193,11 @@ def test_download_uk_gtfs_can_download_bus_only(
 
 
 def test_download_uk_gtfs_passes_options_to_downloader(
-    tmp_path,
-    monkeypatch,
-    north_west_feed,
-    national_rail_feed,
-):
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    north_west_feed: GTFSFeed,
+    national_rail_feed: GTFSFeed,
+) -> None:
     """Overwrite and validation options should reach each download."""
     monkeypatch.setattr(
         api,
@@ -206,22 +211,22 @@ def test_download_uk_gtfs_passes_options_to_downloader(
     monkeypatch.setattr(
         api,
         "match_place_to_bus_feed",
-        lambda **kwargs: (
+        lambda **_kwargs: (
             north_west_feed,
             1.0,
             "greater manchester",
         ),
     )
 
-    calls = []
+    calls: list[tuple[GTFSFeed, Path, bool, bool]] = []
 
     def fake_download_gtfs_feed(
-        feed,
-        output_directory,
+        feed: GTFSFeed,
+        output_directory: Path,
         *,
-        overwrite,
-        validate,
-    ):
+        overwrite: bool,
+        validate: bool,
+    ) -> Path:
         calls.append(
             (
                 feed,
@@ -264,13 +269,13 @@ def test_download_uk_gtfs_passes_options_to_downloader(
 
 
 def test_download_uk_gtfs_passes_match_threshold(
-    tmp_path,
-    monkeypatch,
-    north_west_feed,
-    national_rail_feed,
-):
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    north_west_feed: GTFSFeed,
+    national_rail_feed: GTFSFeed,
+) -> None:
     """The configured minimum score should reach the matcher."""
-    received_arguments = {}
+    received_arguments: dict[str, object] = {}
 
     monkeypatch.setattr(
         api,
@@ -282,10 +287,10 @@ def test_download_uk_gtfs_passes_match_threshold(
     )
 
     def fake_match_place_to_bus_feed(
-        place_name,
-        bus_feeds,
-        minimum_score,
-    ):
+        place_name: str,
+        bus_feeds: list[GTFSFeed],
+        minimum_score: float,
+    ) -> tuple[GTFSFeed, float, str]:
         received_arguments["place_name"] = place_name
         received_arguments["bus_feeds"] = bus_feeds
         received_arguments["minimum_score"] = minimum_score
@@ -305,7 +310,7 @@ def test_download_uk_gtfs_passes_match_threshold(
     monkeypatch.setattr(
         api,
         "download_gtfs_feed",
-        lambda feed, output_directory, **kwargs: output_directory / feed.filename,
+        lambda feed, output_directory, **_kwargs: output_directory / feed.filename,
     )
 
     api.download_uk_gtfs(
@@ -323,12 +328,12 @@ def test_download_uk_gtfs_passes_match_threshold(
 
 
 def test_download_uk_gtfs_propagates_discovery_error(
-    tmp_path,
-    monkeypatch,
-):
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """A feed-discovery failure should not be hidden by the API."""
 
-    def fake_obtain_available_feeds():
+    def fake_obtain_available_feeds() -> tuple[list[GTFSFeed], GTFSFeed]:
         raise RuntimeError("README unavailable")
 
     monkeypatch.setattr(
@@ -348,11 +353,11 @@ def test_download_uk_gtfs_propagates_discovery_error(
 
 
 def test_download_uk_gtfs_propagates_match_error(
-    tmp_path,
-    monkeypatch,
-    north_west_feed,
-    national_rail_feed,
-):
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    north_west_feed: GTFSFeed,
+    national_rail_feed: GTFSFeed,
+) -> None:
     """An unrecognised place error should reach the caller."""
     monkeypatch.setattr(
         api,
@@ -363,7 +368,7 @@ def test_download_uk_gtfs_propagates_match_error(
         ),
     )
 
-    def fake_match_place_to_bus_feed(**kwargs):
+    def fake_match_place_to_bus_feed(**_kwargs: object) -> tuple[GTFSFeed, float, str]:
         raise ValueError("Could not confidently match place")
 
     monkeypatch.setattr(
@@ -383,11 +388,11 @@ def test_download_uk_gtfs_propagates_match_error(
 
 
 def test_download_uk_gtfs_propagates_download_error(
-    tmp_path,
-    monkeypatch,
-    north_west_feed,
-    national_rail_feed,
-):
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    north_west_feed: GTFSFeed,
+    national_rail_feed: GTFSFeed,
+) -> None:
     """A failed download should reach the caller."""
     monkeypatch.setattr(
         api,
@@ -401,14 +406,14 @@ def test_download_uk_gtfs_propagates_download_error(
     monkeypatch.setattr(
         api,
         "match_place_to_bus_feed",
-        lambda **kwargs: (
+        lambda **_kwargs: (
             north_west_feed,
             1.0,
             "manchester",
         ),
     )
 
-    def fake_download_gtfs_feed(*args, **kwargs):
+    def fake_download_gtfs_feed(*_args: object, **_kwargs: object) -> Path:
         raise RuntimeError("HTTP 500 while downloading feed")
 
     monkeypatch.setattr(

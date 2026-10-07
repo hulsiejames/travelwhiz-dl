@@ -7,7 +7,7 @@ import pytest
 from travelwhiz_dl.models import GTFSFeed
 
 
-def test_gtfs_feed_stores_supplied_values():
+def test_gtfs_feed_stores_supplied_values() -> None:
     """A GTFSFeed should retain its supplied metadata."""
     feed = GTFSFeed(
         name="North West England",
@@ -20,7 +20,7 @@ def test_gtfs_feed_stores_supplied_values():
     assert feed.category == "regional_bus"
 
 
-def test_gtfs_feed_filename_is_extracted_from_url():
+def test_gtfs_feed_filename_is_extracted_from_url() -> None:
     """The filename property should return the URL's final component."""
     feed = GTFSFeed(
         name="National Rail",
@@ -31,7 +31,7 @@ def test_gtfs_feed_filename_is_extracted_from_url():
     assert feed.filename == "gb-nationalrail.gtfs.zip"
 
 
-def test_gtfs_feed_filename_handles_simple_url():
+def test_gtfs_feed_filename_handles_simple_url() -> None:
     """The filename property should also work without nested URL paths."""
     feed = GTFSFeed(
         name="Test Feed",
@@ -42,7 +42,7 @@ def test_gtfs_feed_filename_handles_simple_url():
     assert feed.filename == "test.gtfs.zip"
 
 
-def test_gtfs_feed_is_immutable():
+def test_gtfs_feed_is_immutable() -> None:
     """GTFSFeed instances should not be mutable."""
     feed = GTFSFeed(
         name="North West England",
@@ -54,7 +54,7 @@ def test_gtfs_feed_is_immutable():
         feed.name = "East Midlands"
 
 
-def test_equal_gtfs_feeds_compare_as_equal():
+def test_equal_gtfs_feeds_compare_as_equal() -> None:
     """Equivalent GTFSFeed objects should compare by value."""
     first_feed = GTFSFeed(
         name="National Rail",
@@ -71,7 +71,7 @@ def test_equal_gtfs_feeds_compare_as_equal():
     assert first_feed == second_feed
 
 
-def test_different_gtfs_feeds_do_not_compare_as_equal():
+def test_different_gtfs_feeds_do_not_compare_as_equal() -> None:
     """Feeds with differing values should not compare as equal."""
     bus_feed = GTFSFeed(
         name="North West England",

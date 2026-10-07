@@ -1,9 +1,13 @@
+"""Minimal GTFS validation smoke tests."""
+
 import zipfile
+from pathlib import Path
 
 from travelwhiz_dl.validation import validate_gtfs_zip
 
 
-def test_valid_gtfs_zip_passes(tmp_path):
+def test_valid_gtfs_zip_passes(tmp_path: Path) -> None:
+    """A minimal valid GTFS archive should pass validation."""
     zip_path = tmp_path / "test.gtfs.zip"
 
     required_files = [

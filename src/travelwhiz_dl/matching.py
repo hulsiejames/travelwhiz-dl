@@ -6,13 +6,17 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from collections.abc import Iterable
 from difflib import SequenceMatcher
+from typing import TYPE_CHECKING
 
 # Local
 from travelwhiz_dl.config import DEFAULT_MINIMUM_MATCH_SCORE
 from travelwhiz_dl.lookups import PLACE_TO_REGION
-from travelwhiz_dl.models import GTFSFeed
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from travelwhiz_dl.models import GTFSFeed
 
 
 # # # # FUNCTIONS # # # #
@@ -50,7 +54,7 @@ def find_feed_for_region(
     return None
 
 
-def match_place_to_bus_feed(
+def match_place_to_bus_feed(  # noqa: C901, PLR0912
     place_name: str,
     bus_feeds: Iterable[GTFSFeed],
     minimum_score: float = DEFAULT_MINIMUM_MATCH_SCORE,
@@ -101,6 +105,8 @@ def match_place_to_bus_feed(
 
                 containment_candidates.append((coverage, alias, feed))
 
+    containment_threshold = 0.60
+
     if containment_candidates:
         containment_candidates.sort(
             key=lambda item: item[0],
@@ -109,7 +115,7 @@ def match_place_to_bus_feed(
 
         best_coverage, best_alias, best_feed = containment_candidates[0]
 
-        if best_coverage >= 0.60:
+        if best_coverage >= containment_threshold:
             return best_feed, best_coverage, best_alias
 
     fuzzy_candidates: list[tuple[float, str, GTFSFeed]] = []

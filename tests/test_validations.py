@@ -41,7 +41,7 @@ def create_gtfs_zip(
     return zip_path
 
 
-def test_read_gtfs_members_returns_member_basenames(tmp_path):
+def test_read_gtfs_members_returns_member_basenames(tmp_path: Path) -> None:
     """ZIP members should be returned as lowercase basenames."""
     zip_path = create_gtfs_zip(
         tmp_path / "test.gtfs.zip",
@@ -59,7 +59,7 @@ def test_read_gtfs_members_returns_member_basenames(tmp_path):
     }
 
 
-def test_validate_gtfs_zip_accepts_required_files(tmp_path):
+def test_validate_gtfs_zip_accepts_required_files(tmp_path: Path) -> None:
     """A ZIP containing the required GTFS files should pass."""
     zip_path = create_gtfs_zip(
         tmp_path / "valid.gtfs.zip",
@@ -71,7 +71,7 @@ def test_validate_gtfs_zip_accepts_required_files(tmp_path):
     assert result is None
 
 
-def test_validate_gtfs_zip_accepts_additional_files(tmp_path):
+def test_validate_gtfs_zip_accepts_additional_files(tmp_path: Path) -> None:
     """Optional and extended GTFS files should not cause failure."""
     zip_path = create_gtfs_zip(
         tmp_path / "valid-with-extras.gtfs.zip",
@@ -87,7 +87,7 @@ def test_validate_gtfs_zip_accepts_additional_files(tmp_path):
     validate_gtfs_zip(zip_path)
 
 
-def test_validate_gtfs_zip_accepts_nested_files(tmp_path):
+def test_validate_gtfs_zip_accepts_nested_files(tmp_path: Path) -> None:
     """
     Required files should be recognised even inside a ZIP directory.
 
@@ -104,7 +104,7 @@ def test_validate_gtfs_zip_accepts_nested_files(tmp_path):
     validate_gtfs_zip(zip_path)
 
 
-def test_validate_gtfs_zip_is_case_insensitive(tmp_path):
+def test_validate_gtfs_zip_is_case_insensitive(tmp_path: Path) -> None:
     """Required filenames should be matched case-insensitively."""
     uppercase_files = {filename.upper() for filename in REQUIRED_GTFS_FILES}
 
@@ -117,8 +117,8 @@ def test_validate_gtfs_zip_is_case_insensitive(tmp_path):
 
 
 def test_validate_gtfs_zip_rejects_missing_required_file(
-    tmp_path,
-):
+    tmp_path: Path,
+) -> None:
     """Validation should identify absent required GTFS files."""
     zip_path = create_gtfs_zip(
         tmp_path / "missing-stops.gtfs.zip",
@@ -133,8 +133,8 @@ def test_validate_gtfs_zip_rejects_missing_required_file(
 
 
 def test_validate_gtfs_zip_reports_multiple_missing_files(
-    tmp_path,
-):
+    tmp_path: Path,
+) -> None:
     """Validation should report every missing required file."""
     zip_path = create_gtfs_zip(
         tmp_path / "incomplete.gtfs.zip",
@@ -154,7 +154,7 @@ def test_validate_gtfs_zip_reports_multiple_missing_files(
     assert "trips.txt" in error_message
 
 
-def test_validate_gtfs_zip_rejects_non_zip_file(tmp_path):
+def test_validate_gtfs_zip_rejects_non_zip_file(tmp_path: Path) -> None:
     """A regular text file should not pass ZIP validation."""
     invalid_path = tmp_path / "not-a-zip.gtfs.zip"
     invalid_path.write_text(
@@ -169,7 +169,7 @@ def test_validate_gtfs_zip_rejects_non_zip_file(tmp_path):
         validate_gtfs_zip(invalid_path)
 
 
-def test_validate_gtfs_zip_rejects_missing_path(tmp_path):
+def test_validate_gtfs_zip_rejects_missing_path(tmp_path: Path) -> None:
     """A nonexistent path should raise an appropriate file error."""
     missing_path = tmp_path / "does-not-exist.gtfs.zip"
 

@@ -1,7 +1,10 @@
+"""Tests for GTFS URL discovery helpers."""
+
 from travelwhiz_dl.discovery import extract_gtfs_urls
 
 
-def test_extract_gtfs_urls_removes_duplicates():
+def test_extract_gtfs_urls_removes_duplicates() -> None:
+    """Duplicate feed URLs should be removed while preserving order."""
     readme = """
     https://example.com/uk-busmetro-NW.gtfs.zip
     https://example.com/gb-nationalrail.gtfs.zip

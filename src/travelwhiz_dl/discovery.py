@@ -35,13 +35,13 @@ def fetch_readme(
     timeout: int = DEFAULT_README_TIMEOUT,
 ) -> str:
     """Download the current repository README."""
-    request = urllib.request.Request(
+    request = urllib.request.Request(  # noqa: S310
         readme_url,
         headers={"User-Agent": USER_AGENT},
     )
 
     try:
-        with urllib.request.urlopen(
+        with urllib.request.urlopen(  # noqa: S310
             request,
             timeout=timeout,
         ) as response:

@@ -4,9 +4,11 @@
 # Built-Ins
 from __future__ import annotations
 
+import logging
 import urllib.error
 import urllib.request
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 # Local
 from travelwhiz_dl.config import (
@@ -14,8 +16,12 @@ from travelwhiz_dl.config import (
     DEFAULT_DOWNLOAD_TIMEOUT,
     USER_AGENT,
 )
-from travelwhiz_dl.models import GTFSFeed
 from travelwhiz_dl.validation import validate_gtfs_zip
+
+if TYPE_CHECKING:
+    from travelwhiz_dl.models import GTFSFeed
+
+LOG = logging.getLogger(__name__)
 
 # # # # FUNCTIONS # # # #
 
@@ -25,7 +31,7 @@ def format_megabytes(number_of_bytes: int) -> str:
     return f"{number_of_bytes / (1024 * 1024):,.1f} MiB"
 
 
-def download_gtfs_feed(
+def download_gtfs_feed(  # noqa: C901
     feed: GTFSFeed,
     output_directory: str | Path,
     *,
@@ -43,31 +49,30 @@ def download_gtfs_feed(
 
     if destination.exists() and not overwrite:
         if not validate:
-            print(f"[SKIP] Existing file found: {destination}")
+            LOG.info("[SKIP] Existing file found: %s", destination)
             return destination
 
         try:
             validate_gtfs_zip(destination)
         except RuntimeError:
-            print("[WARNING] Existing file failed validation and will be downloaded again.")
+            LOG.warning("Existing file failed validation and will be downloaded again.")
         else:
-            print(f"[SKIP] Existing valid file found: {destination}")
+            LOG.info("[SKIP] Existing valid file found: %s", destination)
             return destination
 
     temporary_destination.unlink(missing_ok=True)
 
-    request = urllib.request.Request(
+    request = urllib.request.Request(  # noqa: S310
         feed.url,
         headers={"User-Agent": USER_AGENT},
     )
 
-    print()
-    print(f"[DOWNLOAD] {feed.name}")
-    print(f"URL:         {feed.url}")
-    print(f"Destination: {destination}")
+    LOG.info("[DOWNLOAD] %s", feed.name)
+    LOG.info("URL:         %s", feed.url)
+    LOG.info("Destination: %s", destination)
 
     try:
-        with urllib.request.urlopen(
+        with urllib.request.urlopen(  # noqa: S310
             request,
             timeout=timeout,
         ) as response:
@@ -87,15 +92,16 @@ def download_gtfs_feed(
                         report_percentage = percentage // 10 * 10
 
                         if report_percentage > last_reported_percentage:
-                            print(
-                                f"Progress:    {percentage:3d}% "
-                                f"({format_megabytes(downloaded_size)} "
-                                f"of {format_megabytes(total_size)})"
+                            LOG.info(
+                                "Progress:    %3d%% (%s of %s)",
+                                percentage,
+                                format_megabytes(downloaded_size),
+                                format_megabytes(total_size),
                             )
                             last_reported_percentage = report_percentage
 
         if validate:
-            print(f"[VALIDATE] {temporary_destination.name}")
+            LOG.info("[VALIDATE] %s", temporary_destination.name)
             validate_gtfs_zip(temporary_destination)
 
         temporary_destination.replace(destination)
@@ -118,6 +124,6 @@ def download_gtfs_feed(
         temporary_destination.unlink(missing_ok=True)
         raise
 
-    print(f"[COMPLETE] {destination}")
+    LOG.info("[COMPLETE] %s", destination)
 
     return destination

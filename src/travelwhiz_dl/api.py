@@ -4,6 +4,7 @@
 # Built-Ins
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 # Local
@@ -11,6 +12,8 @@ from travelwhiz_dl.config import DEFAULT_MINIMUM_MATCH_SCORE
 from travelwhiz_dl.discovery import obtain_available_feeds
 from travelwhiz_dl.downloader import download_gtfs_feed
 from travelwhiz_dl.matching import match_place_to_bus_feed
+
+LOG = logging.getLogger(__name__)
 
 # # # # FUNCTIONS # # # #
 
@@ -54,19 +57,18 @@ def download_uk_gtfs(
     """
     output_directory = Path(output_directory).expanduser().resolve()
 
-    print("=" * 72)
-    print("UK GTFS downloader")
-    print("=" * 72)
-    print(f"Requested place:  {place_name}")
-    print(f"Output directory: {output_directory}")
-    print()
-    print("[DISCOVERY] Reading current download URLs from GitHub...")
+    LOG.info("%s", "=" * 72)
+    LOG.info("UK GTFS downloader")
+    LOG.info("%s", "=" * 72)
+    LOG.info("Requested place:  %s", place_name)
+    LOG.info("Output directory: %s", output_directory)
+    LOG.info("[DISCOVERY] Reading current download URLs from GitHub...")
 
     bus_feeds, national_rail_feed = obtain_available_feeds()
 
-    print(f"Found {len(bus_feeds)} regional bus/metro feeds.")
-    print("Regional feeds: " + ", ".join(feed.name for feed in bus_feeds))
-    print(f"National Rail: {national_rail_feed.filename}")
+    LOG.info("Found %s regional bus/metro feeds.", len(bus_feeds))
+    LOG.info("Regional feeds: %s", ", ".join(feed.name for feed in bus_feeds))
+    LOG.info("National Rail: %s", national_rail_feed.filename)
 
     selected_bus_feed, score, matched_term = match_place_to_bus_feed(
         place_name=place_name,
@@ -74,13 +76,12 @@ def download_uk_gtfs(
         minimum_score=minimum_match_score,
     )
 
-    print()
-    print("[MATCH]")
-    print(f"Input:         {place_name}")
-    print(f"Matched term:  {matched_term}")
-    print(f"Selected feed: {selected_bus_feed.name}")
-    print(f"Match score:   {score:.2f}")
-    print(f"Bus filename:  {selected_bus_feed.filename}")
+    LOG.info("[MATCH]")
+    LOG.info("Input:         %s", place_name)
+    LOG.info("Matched term:  %s", matched_term)
+    LOG.info("Selected feed: %s", selected_bus_feed.name)
+    LOG.info("Match score:   %.2f", score)
+    LOG.info("Bus filename:  %s", selected_bus_feed.filename)
 
     downloaded_files: dict[str, Path] = {}
 
@@ -99,12 +100,11 @@ def download_uk_gtfs(
             validate=validate,
         )
 
-    print()
-    print("=" * 72)
-    print("Download summary")
-    print("=" * 72)
+    LOG.info("%s", "=" * 72)
+    LOG.info("Download summary")
+    LOG.info("%s", "=" * 72)
 
     for category, downloaded_path in downloaded_files.items():
-        print(f"{category.title():<8}: {downloaded_path}")
+        LOG.info("%s: %s", category.title().ljust(8), downloaded_path)
 
     return downloaded_files
