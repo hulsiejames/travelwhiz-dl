@@ -25,6 +25,9 @@ Homepage = "https://github.com/hulsiejames/travelwhiz-dl"
 "Bug Tracker" = "https://github.com/hulsiejames/travelwhiz-dl/issues"
 Documentation = "https://travelwhiz-dl.readthedocs.io/en/stable/"
 
+[project.scripts]
+travelwhiz-dl = "travelwhiz_dl.__main__:command_line_main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 namespaces = true
