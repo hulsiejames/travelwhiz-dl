@@ -1,8 +1,5 @@
 """Tests for the public travelwhiz_dl API."""
 
-from pathlib import Path
-from unittest.mock import call
-
 import pytest
 
 from travelwhiz_dl import api
@@ -14,10 +11,7 @@ def north_west_feed() -> GTFSFeed:
     """Return a representative regional bus feed."""
     return GTFSFeed(
         name="North West England",
-        url=(
-            "https://storage.example.com/"
-            "uk-busmetro-NW.gtfs.zip"
-        ),
+        url=("https://storage.example.com/uk-busmetro-NW.gtfs.zip"),
         category="regional_bus",
     )
 
@@ -27,10 +21,7 @@ def national_rail_feed() -> GTFSFeed:
     """Return a representative National Rail feed."""
     return GTFSFeed(
         name="National Rail",
-        url=(
-            "https://storage.example.com/"
-            "gb-nationalrail.gtfs.zip"
-        ),
+        url=("https://storage.example.com/gb-nationalrail.gtfs.zip"),
         category="national_rail",
     )
 
@@ -42,12 +33,8 @@ def test_download_uk_gtfs_downloads_bus_and_rail(
     national_rail_feed,
 ):
     """The public API should download both requested feeds."""
-    downloaded_bus_path = (
-        tmp_path / "uk-busmetro-NW.gtfs.zip"
-    )
-    downloaded_rail_path = (
-        tmp_path / "gb-nationalrail.gtfs.zip"
-    )
+    downloaded_bus_path = tmp_path / "uk-busmetro-NW.gtfs.zip"
+    downloaded_rail_path = tmp_path / "gb-nationalrail.gtfs.zip"
 
     def fake_obtain_available_feeds():
         return [north_west_feed], national_rail_feed
@@ -146,9 +133,7 @@ def test_download_uk_gtfs_can_download_bus_only(
     national_rail_feed,
 ):
     """National Rail should be omitted when it is not requested."""
-    downloaded_bus_path = (
-        tmp_path / "uk-busmetro-NW.gtfs.zip"
-    )
+    downloaded_bus_path = tmp_path / "uk-busmetro-NW.gtfs.zip"
 
     monkeypatch.setattr(
         api,
@@ -320,9 +305,7 @@ def test_download_uk_gtfs_passes_match_threshold(
     monkeypatch.setattr(
         api,
         "download_gtfs_feed",
-        lambda feed, output_directory, **kwargs: (
-            output_directory / feed.filename
-        ),
+        lambda feed, output_directory, **kwargs: output_directory / feed.filename,
     )
 
     api.download_uk_gtfs(
@@ -344,6 +327,7 @@ def test_download_uk_gtfs_propagates_discovery_error(
     monkeypatch,
 ):
     """A feed-discovery failure should not be hidden by the API."""
+
     def fake_obtain_available_feeds():
         raise RuntimeError("README unavailable")
 

@@ -1,22 +1,15 @@
 from travelwhiz_dl.matching import match_place_to_bus_feed
 from travelwhiz_dl.models import GTFSFeed
 
-
 BUS_FEEDS = [
     GTFSFeed(
         name="North West England",
-        url=(
-            "https://example.com/"
-            "uk-busmetro-NW.gtfs.zip"
-        ),
+        url=("https://example.com/uk-busmetro-NW.gtfs.zip"),
         category="regional_bus",
     ),
     GTFSFeed(
         name="East Midlands",
-        url=(
-            "https://example.com/"
-            "uk-busmetro-EM.gtfs.zip"
-        ),
+        url=("https://example.com/uk-busmetro-EM.gtfs.zip"),
         category="regional_bus",
     ),
 ]

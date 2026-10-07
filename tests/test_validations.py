@@ -1,7 +1,6 @@
 """Tests for travelwhiz_dl.validation."""
 
 import zipfile
-
 from pathlib import Path
 
 import pytest
@@ -10,7 +9,6 @@ from travelwhiz_dl.validation import (
     read_gtfs_members,
     validate_gtfs_zip,
 )
-
 
 REQUIRED_GTFS_FILES = {
     "agency.txt",
@@ -96,10 +94,7 @@ def test_validate_gtfs_zip_accepts_nested_files(tmp_path):
     Although root-level GTFS files are preferable, read_gtfs_members uses
     each member's basename, so this documents the current behaviour.
     """
-    nested_files = {
-        f"gtfs/{filename}"
-        for filename in REQUIRED_GTFS_FILES
-    }
+    nested_files = {f"gtfs/{filename}" for filename in REQUIRED_GTFS_FILES}
 
     zip_path = create_gtfs_zip(
         tmp_path / "nested.gtfs.zip",
@@ -111,10 +106,7 @@ def test_validate_gtfs_zip_accepts_nested_files(tmp_path):
 
 def test_validate_gtfs_zip_is_case_insensitive(tmp_path):
     """Required filenames should be matched case-insensitively."""
-    uppercase_files = {
-        filename.upper()
-        for filename in REQUIRED_GTFS_FILES
-    }
+    uppercase_files = {filename.upper() for filename in REQUIRED_GTFS_FILES}
 
     zip_path = create_gtfs_zip(
         tmp_path / "uppercase.gtfs.zip",
