@@ -3,6 +3,7 @@
 # # # # IMPORTS # # # #
 # Built-Ins
 from __future__ import annotations
+
 from pathlib import Path
 
 # Local
@@ -11,8 +12,8 @@ from travelwhiz_dl.discovery import obtain_available_feeds
 from travelwhiz_dl.downloader import download_gtfs_feed
 from travelwhiz_dl.matching import match_place_to_bus_feed
 
-
 # # # # FUNCTIONS # # # #
+
 
 def download_uk_gtfs(
     place_name: str,
@@ -64,18 +65,13 @@ def download_uk_gtfs(
     bus_feeds, national_rail_feed = obtain_available_feeds()
 
     print(f"Found {len(bus_feeds)} regional bus/metro feeds.")
-    print(
-        "Regional feeds: "
-        + ", ".join(feed.name for feed in bus_feeds)
-    )
+    print("Regional feeds: " + ", ".join(feed.name for feed in bus_feeds))
     print(f"National Rail: {national_rail_feed.filename}")
 
-    selected_bus_feed, score, matched_term = (
-        match_place_to_bus_feed(
-            place_name=place_name,
-            bus_feeds=bus_feeds,
-            minimum_score=minimum_match_score,
-        )
+    selected_bus_feed, score, matched_term = match_place_to_bus_feed(
+        place_name=place_name,
+        bus_feeds=bus_feeds,
+        minimum_score=minimum_match_score,
     )
 
     print()

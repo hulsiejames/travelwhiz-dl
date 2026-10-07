@@ -37,7 +37,6 @@ PLACE_TO_REGION = {
     "norwich": "East Anglia",
     "peterborough": "East Anglia",
     "suffolk": "East Anglia",
-
     # -----------------------------------------------------------------------
     # East Midlands
     # -----------------------------------------------------------------------
@@ -53,7 +52,6 @@ PLACE_TO_REGION = {
     "nottingham": "East Midlands",
     "nottinghamshire": "East Midlands",
     "rutland": "East Midlands",
-
     # -----------------------------------------------------------------------
     # South East England and London
     # -----------------------------------------------------------------------
@@ -84,7 +82,6 @@ PLACE_TO_REGION = {
     "southampton": "South East & London",
     "surrey": "South East & London",
     "west sussex": "South East & London",
-
     # -----------------------------------------------------------------------
     # North East England
     # -----------------------------------------------------------------------
@@ -108,7 +105,6 @@ PLACE_TO_REGION = {
     "sunderland": "North East England",
     "tees valley": "North East England",
     "tyne and wear": "North East England",
-
     # -----------------------------------------------------------------------
     # North West England
     # -----------------------------------------------------------------------
@@ -145,7 +141,6 @@ PLACE_TO_REGION = {
     "warrington": "North West England",
     "wigan": "North West England",
     "wirral": "North West England",
-
     # -----------------------------------------------------------------------
     # Scotland
     # -----------------------------------------------------------------------
@@ -161,7 +156,6 @@ PLACE_TO_REGION = {
     "inverness": "Scotland",
     "perth": "Scotland",
     "stirling": "Scotland",
-
     # -----------------------------------------------------------------------
     # South West England
     # -----------------------------------------------------------------------
@@ -186,7 +180,6 @@ PLACE_TO_REGION = {
     "torbay": "South West England",
     "truro": "South West England",
     "wiltshire": "South West England",
-
     # -----------------------------------------------------------------------
     # Wales
     # -----------------------------------------------------------------------
@@ -212,7 +205,6 @@ PLACE_TO_REGION = {
     "swansea": "Wales",
     "torfaen": "Wales",
     "wrexham": "Wales",
-
     # -----------------------------------------------------------------------
     # West Midlands
     # -----------------------------------------------------------------------
@@ -236,7 +228,6 @@ PLACE_TO_REGION = {
     "wolverhampton": "West Midlands",
     "worcester": "West Midlands",
     "worcestershire": "West Midlands",
-
     # -----------------------------------------------------------------------
     # Yorkshire
     # -----------------------------------------------------------------------

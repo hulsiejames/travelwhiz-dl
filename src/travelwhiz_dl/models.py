@@ -3,10 +3,11 @@
 # # # # IMPORTS # # # #
 # Built-Ins
 from __future__ import annotations
+
 from dataclasses import dataclass
 
-
 # # # # DATA CLASSES # # # #
+
 
 @dataclass(frozen=True, slots=True)
 class GTFSFeed:

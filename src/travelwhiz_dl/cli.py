@@ -10,6 +10,7 @@ import argparse
 # Command-line interface
 # ---------------------------------------------------------------------------
 
+
 def build_argument_parser() -> argparse.ArgumentParser:
     """Construct the command-line argument parser."""
     parser = argparse.ArgumentParser(
@@ -29,9 +30,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "output_directory",
-        help=(
-            "Directory to which the GTFS ZIP files will be downloaded."
-        ),
+        help=("Directory to which the GTFS ZIP files will be downloaded."),
     )
 
     parser.add_argument(
@@ -56,10 +55,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
         "--minimum-match-score",
         type=float,
         default=0.72,
-        help=(
-            "Minimum fuzzy matching score between 0 and 1. "
-            "Default: 0.72."
-        ),
+        help=("Minimum fuzzy matching score between 0 and 1. Default: 0.72."),
     )
 
     return parser

@@ -3,7 +3,7 @@
 # # # # IMPORTS # # # #
 # Built-Ins
 from __future__ import annotations
-import shutil
+
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -17,8 +17,8 @@ from travelwhiz_dl.config import (
 from travelwhiz_dl.models import GTFSFeed
 from travelwhiz_dl.validation import validate_gtfs_zip
 
-
 # # # # FUNCTIONS # # # #
+
 
 def format_megabytes(number_of_bytes: int) -> str:
     """Format a byte count as mebibytes."""
@@ -39,9 +39,7 @@ def download_gtfs_feed(
     output_directory.mkdir(parents=True, exist_ok=True)
 
     destination = output_directory / feed.filename
-    temporary_destination = destination.with_name(
-        destination.name + ".part"
-    )
+    temporary_destination = destination.with_name(destination.name + ".part")
 
     if destination.exists() and not overwrite:
         if not validate:
@@ -51,14 +49,9 @@ def download_gtfs_feed(
         try:
             validate_gtfs_zip(destination)
         except RuntimeError:
-            print(
-                "[WARNING] Existing file failed validation and "
-                "will be downloaded again."
-            )
+            print("[WARNING] Existing file failed validation and will be downloaded again.")
         else:
-            print(
-                f"[SKIP] Existing valid file found: {destination}"
-            )
+            print(f"[SKIP] Existing valid file found: {destination}")
             return destination
 
     temporary_destination.unlink(missing_ok=True)
@@ -79,11 +72,7 @@ def download_gtfs_feed(
             timeout=timeout,
         ) as response:
             content_length = response.headers.get("Content-Length")
-            total_size = (
-                int(content_length)
-                if content_length is not None
-                else None
-            )
+            total_size = int(content_length) if content_length is not None else None
 
             downloaded_size = 0
             last_reported_percentage = -10
@@ -94,23 +83,16 @@ def download_gtfs_feed(
                     downloaded_size += len(chunk)
 
                     if total_size:
-                        percentage = int(
-                            downloaded_size * 100 / total_size
-                        )
+                        percentage = int(downloaded_size * 100 / total_size)
                         report_percentage = percentage // 10 * 10
 
-                        if (
-                            report_percentage
-                            > last_reported_percentage
-                        ):
+                        if report_percentage > last_reported_percentage:
                             print(
                                 f"Progress:    {percentage:3d}% "
                                 f"({format_megabytes(downloaded_size)} "
                                 f"of {format_megabytes(total_size)})"
                             )
-                            last_reported_percentage = (
-                                report_percentage
-                            )
+                            last_reported_percentage = report_percentage
 
         if validate:
             print(f"[VALIDATE] {temporary_destination.name}")
@@ -122,16 +104,14 @@ def download_gtfs_feed(
         temporary_destination.unlink(missing_ok=True)
 
         raise RuntimeError(
-            f"HTTP {exc.code} while downloading {feed.name}: "
-            f"{feed.url}"
+            f"HTTP {exc.code} while downloading {feed.name}: {feed.url}"
         ) from exc
 
     except urllib.error.URLError as exc:
         temporary_destination.unlink(missing_ok=True)
 
         raise RuntimeError(
-            f"Network error while downloading {feed.name}: "
-            f"{exc.reason}"
+            f"Network error while downloading {feed.name}: {exc.reason}"
         ) from exc
 
     except Exception:

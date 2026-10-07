@@ -56,16 +56,14 @@ def fetch_readme(
 
     except urllib.error.URLError as exc:
         raise RuntimeError(
-            "Could not download the repository README. "
-            f"Network error: {exc.reason}"
+            f"Could not download the repository README. Network error: {exc.reason}"
         ) from exc
 
 
 def extract_gtfs_urls(readme_text: str) -> list[str]:
     """Extract unique GTFS ZIP URLs from README text."""
     discovered_urls = [
-        match.rstrip(".,;:")
-        for match in _GTFS_URL_PATTERN.findall(readme_text)
+        match.rstrip(".,;:") for match in _GTFS_URL_PATTERN.findall(readme_text)
     ]
 
     unique_urls = list(dict.fromkeys(discovered_urls))
@@ -126,8 +124,7 @@ def obtain_available_feeds(
 
     if not rail_candidates:
         raise RuntimeError(
-            "The README was downloaded, but "
-            "gb-nationalrail.gtfs.zip was not found."
+            "The README was downloaded, but gb-nationalrail.gtfs.zip was not found."
         )
 
     if len(rail_candidates) > 1:

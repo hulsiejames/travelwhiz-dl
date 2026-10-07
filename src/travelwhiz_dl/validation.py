@@ -3,14 +3,15 @@
 # # # # IMPORTS # # # #
 # Built-Ins
 from __future__ import annotations
+
 import zipfile
 from pathlib import Path
 
 # Local
 from travelwhiz_dl.config import REQUIRED_GTFS_FILES
 
-
 # # # # FUNCTIONS # # # #
+
 
 def read_gtfs_members(zip_path: Path) -> set[str]:
     """Return lowercase file basenames contained in a GTFS ZIP."""
@@ -19,10 +20,7 @@ def read_gtfs_members(zip_path: Path) -> set[str]:
             corrupt_member = archive.testzip()
 
             if corrupt_member is not None:
-                raise RuntimeError(
-                    f"The ZIP contains a corrupt member: "
-                    f"{corrupt_member}"
-                )
+                raise RuntimeError(f"The ZIP contains a corrupt member: {corrupt_member}")
 
             return {
                 Path(member).name.casefold()
@@ -31,9 +29,7 @@ def read_gtfs_members(zip_path: Path) -> set[str]:
             }
 
     except zipfile.BadZipFile as exc:
-        raise RuntimeError(
-            f"The downloaded file is not a valid ZIP: {zip_path}"
-        ) from exc
+        raise RuntimeError(f"The downloaded file is not a valid ZIP: {zip_path}") from exc
 
 
 def validate_gtfs_zip(zip_path: str | Path) -> None:

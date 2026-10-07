@@ -3,15 +3,17 @@
 # # # # IMPORTS # # # #
 # Built-Ins
 from __future__ import annotations
+
 import re
 import unicodedata
+from collections.abc import Iterable
 from difflib import SequenceMatcher
-from typing import Iterable
 
 # Local
 from travelwhiz_dl.config import DEFAULT_MINIMUM_MATCH_SCORE
 from travelwhiz_dl.lookups import PLACE_TO_REGION
 from travelwhiz_dl.models import GTFSFeed
+
 
 # # # # FUNCTIONS # # # #
 def normalise_text(value: str) -> str:
@@ -79,9 +81,7 @@ def match_place_to_bus_feed(
         if cleaned_place == normalise_text(feed.name):
             return feed, 1.0, feed.name
 
-    containment_candidates: list[
-        tuple[float, str, GTFSFeed]
-    ] = []
+    containment_candidates: list[tuple[float, str, GTFSFeed]] = []
 
     for alias, region_name in PLACE_TO_REGION.items():
         if alias in cleaned_place or cleaned_place in alias:
@@ -99,9 +99,7 @@ def match_place_to_bus_feed(
                     len(cleaned_place),
                 )
 
-                containment_candidates.append(
-                    (coverage, alias, feed)
-                )
+                containment_candidates.append((coverage, alias, feed))
 
     if containment_candidates:
         containment_candidates.sort(
@@ -109,16 +107,12 @@ def match_place_to_bus_feed(
             reverse=True,
         )
 
-        best_coverage, best_alias, best_feed = (
-            containment_candidates[0]
-        )
+        best_coverage, best_alias, best_feed = containment_candidates[0]
 
         if best_coverage >= 0.60:
             return best_feed, best_coverage, best_alias
 
-    fuzzy_candidates: list[
-        tuple[float, str, GTFSFeed]
-    ] = []
+    fuzzy_candidates: list[tuple[float, str, GTFSFeed]] = []
 
     for alias, region_name in PLACE_TO_REGION.items():
         feed = find_feed_for_region(
@@ -153,14 +147,11 @@ def match_place_to_bus_feed(
 
     if best_score < minimum_score:
         suggestions = "\n".join(
-            f"  - {term!r} -> {feed.name} "
-            f"(score {score:.2f})"
+            f"  - {term!r} -> {feed.name} (score {score:.2f})"
             for score, term, feed in fuzzy_candidates[:5]
         )
 
-        available_regions = ", ".join(
-            feed.name for feed in available_feeds
-        )
+        available_regions = ", ".join(feed.name for feed in available_feeds)
 
         raise ValueError(
             f"Could not confidently match {place_name!r} to a "

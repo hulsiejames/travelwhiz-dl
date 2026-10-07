@@ -3,6 +3,7 @@
 # # # #IMPORTS # # # #
 # Built-Ins
 from __future__ import annotations
+
 import sys
 
 # Local
@@ -17,9 +18,7 @@ def command_line_main() -> int:
     arguments = parser.parse_args()
 
     if not 0.0 <= arguments.minimum_match_score <= 1.0:
-        parser.error(
-            "--minimum-match-score must be between 0 and 1."
-        )
+        parser.error("--minimum-match-score must be between 0 and 1.")
 
     try:
         download_uk_gtfs(
