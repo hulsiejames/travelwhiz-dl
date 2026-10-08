@@ -12,7 +12,7 @@ from caf.toolkit.log_helpers import LogHelper, ToolDetails
 
 # Local
 from travelwhiz_dl.api import download_uk_gtfs
-from travelwhiz_dl.arguments.cli import build_argument_parser
+from travelwhiz_dl.cli import build_argument_parser
 
 # # # # CONSTANTS # # # #
 ROOT = pathlib.Path().cwd()
