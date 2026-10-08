@@ -3,16 +3,13 @@ name: Tests
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   tests:
-    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
     timeout-minutes: 10
     runs-on: ${{ matrix.os }}
     strategy:
